@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite';
+import Box from '@mui/material/Box';
 import { AnyNode, isAsset, isDatapoint } from '../types';
 import EditableNodeLabel from './EditableNodeLabel';
 import TreeStore from '../store';
@@ -18,28 +19,22 @@ const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
   };
 
   return (
-    <>
+    <Box sx={{ pl: 2, py: 0.5 }}>
       <EditableNodeLabel
-        id={node.id}
-        label={node.label}
+        value={node.label}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
       />
-      {isAsset(node) && <div>Type: {node.assetType}</div>}
+      {isAsset(node) && <span>[Asset] {node.assetType}</span>}
       {isDatapoint(node) && (
-        <div>
-          Value: {node.value} {node.units}
-        </div>
+        <span>
+          [Datapoint] {node.value} {node.units}
+        </span>
       )}
-      <div>
-        {store.findChildren(node.id).map(child => (
-          <div key={child.id} style={{ paddingLeft: '1em' }}>
-            |
-            <AnyNodeComponent node={child} store={store} />
-          </div>
-        ))}
-      </div>
-    </>
+      {store.findChildren(node.id).map(child => (
+        <AnyNodeComponent key={child.id} node={child} store={store} />
+      ))}
+    </Box>
   );
 });
 

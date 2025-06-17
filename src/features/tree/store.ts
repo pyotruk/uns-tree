@@ -29,8 +29,8 @@ class TreeStore {
     return this._nodes;
   }
 
-  get rootNode(): AnyNode {
-    return Object.values(this._nodes).find(n => !n.parentId)!;
+  get rootNode(): AnyNode | undefined {
+    return Object.values(this._nodes).find(n => !n.parentId);
   }
 
   findChildren(parentId: string): AnyNode[] {

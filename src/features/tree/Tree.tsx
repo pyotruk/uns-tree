@@ -3,7 +3,9 @@ import TreeStore from './store';
 import AnyNode from './components/AnyNode';
 
 const Tree = observer(({ store }: { store: TreeStore }) => {
-  return <>{store.nodes && <AnyNode node={store.rootNode} store={store} />}</>;
+  return (
+    <>{store.rootNode && <AnyNode node={store.rootNode} store={store} />}</>
+  );
 });
 
 export default Tree;

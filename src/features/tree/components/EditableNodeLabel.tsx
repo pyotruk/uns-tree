@@ -1,16 +1,22 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import useStyles from './styles';
+import TextField from '@mui/material/TextField';
+import EditIcon from '@mui/icons-material/Edit';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
 
-export default function EditableNodeLabel(props: {
-  id: string;
-  label: string;
+type EditableNodeLabelProps = {
+  value: string;
   onUpdate: (label: string) => Promise<void>;
   onDelete: () => Promise<void>;
-}) {
-  const classes = useStyles();
+};
 
+export default function EditableNodeLabel({
+  value,
+  onUpdate,
+  onDelete,
+}: EditableNodeLabelProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [label, setLabel] = useState<string>(props.label);
+  const [label, setLabel] = useState<string>(value);
 
   const toggleIsEditing = () => {
     setIsEditing(!isEditing);
@@ -23,38 +29,39 @@ export default function EditableNodeLabel(props: {
   const handleUpdate = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      await props.onUpdate(label);
+      await onUpdate(label);
       setIsEditing(false);
     } catch {
-      setLabel(props.label);
+      setLabel(value);
     }
   };
 
   const handleDelete = (event: FormEvent) => {
     event.preventDefault();
-    props.onDelete();
+    onDelete();
   };
 
   return (
-    <div className={classes.nodeItem}>
+    <>
       {!isEditing && (
-        <span>
-          <span>{label}</span>
-          <i className="fa fa-pencil" onClick={toggleIsEditing}></i>
-        </span>
+        <>
+          <b>{label}</b>
+          <EditIcon onClick={toggleIsEditing} fontSize="small" />
+        </>
       )}
       {isEditing && (
-        <span>
-          <input
+        <>
+          <TextField
             name="label"
             value={label}
             onChange={handleLabelChange}
             required
+            size="small"
           />
-          <i className="fa fa-check" onClick={handleUpdate}></i>
-        </span>
+          <DoneIcon onClick={handleUpdate} fontSize="small" />
+        </>
       )}
-      <i className="fa fa-times" onClick={handleDelete}></i>
-    </div>
+      <ClearIcon onClick={handleDelete} fontSize="small" />
+    </>
   );
 }
