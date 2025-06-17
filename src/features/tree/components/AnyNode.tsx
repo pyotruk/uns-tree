@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import Box from '@mui/material/Box';
+import EditIcon from '@mui/icons-material/Edit';
+import ClearIcon from '@mui/icons-material/Clear';
 import { AnyNode, isAsset, isDatapoint } from '../types';
-import EditableNodeLabel from './EditableNodeLabel';
 import TreeStore from '../store';
 
 type AnyNodeComponentProps = {
@@ -10,27 +11,24 @@ type AnyNodeComponentProps = {
 };
 
 const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
-  const handleUpdate = async (label: string) => {
-    await store.updateNode({ id: node.id, label });
-  };
-
   const handleDelete = async () => {
     await store.deleteNode(node.id);
   };
 
   return (
     <Box sx={{ pl: 2, py: 0.5 }}>
-      <EditableNodeLabel
-        value={node.label}
-        onUpdate={handleUpdate}
-        onDelete={handleDelete}
-      />
+      <b>{node.label}</b>
+      <EditIcon onClick={() => store.triggerEditing(node)} fontSize="small" />
+      <ClearIcon onClick={handleDelete} fontSize="small" />
+
       {isAsset(node) && <span>[Asset] {node.assetType}</span>}
+
       {isDatapoint(node) && (
         <span>
           [Datapoint] {node.value} {node.units}
         </span>
       )}
+
       {store.findChildren(node.id).map(child => (
         <AnyNodeComponent key={child.id} node={child} store={store} />
       ))}

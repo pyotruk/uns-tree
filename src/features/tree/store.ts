@@ -5,6 +5,8 @@ import service, { NodesMap, Message } from 'api/service';
 class TreeStore {
   _nodes: NodesMap = {};
 
+  editingNode: AnyNode | null = null;
+
   private async fetchNodes(): Promise<void> {
     this._nodes = await service.getAllData();
   }
@@ -19,6 +21,7 @@ class TreeStore {
       _nodes: observable,
       nodes: computed,
       _handleServiceUpdate: action,
+      editingNode: observable,
     });
 
     this.fetchNodes();
@@ -65,6 +68,24 @@ class TreeStore {
 
   async deleteNode(id: string): Promise<void> {
     await service.deleteNode(id);
+  }
+
+  triggerEditing(node: AnyNode): void {
+    this.editingNode = node;
+  }
+
+  closeEditing(): void {
+    this.editingNode = null;
+  }
+
+  async submitEditing(node: AnyNode): Promise<void> {
+    try {
+      await this.updateNode(node);
+    } catch (err) {
+      console.error('submitEditing - failed.', err);
+    } finally {
+      this.closeEditing();
+    }
   }
 }
 
