@@ -7,12 +7,13 @@ const Tree = observer(({ store }: { store: TreeStore }) => {
   return (
     <>
       {store.rootNode && <AnyNode node={store.rootNode} store={store} />}
-      {store.editingNode && (
+      {store.isFormOpen && (
         <FormDialog
           open
-          onClose={() => store.closeEditing()}
-          onSubmit={node => store.submitEditing(node)}
+          onClose={() => store.closeForm()}
+          onSubmit={node => store.submitForm(node)}
           node={store.editingNode}
+          parentId={store.parentId}
         />
       )}
     </>

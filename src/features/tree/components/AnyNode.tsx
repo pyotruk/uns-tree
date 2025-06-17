@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
-import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { AnyNode, isAsset, isDatapoint } from '../types';
 import TreeStore from '../store';
 
@@ -11,15 +12,18 @@ type AnyNodeComponentProps = {
 };
 
 const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
-  const handleDelete = async () => {
-    await store.deleteNode(node.id);
-  };
-
   return (
     <Box sx={{ pl: 2, py: 0.5 }}>
       <b>{node.label}</b>
-      <EditIcon onClick={() => store.triggerEditing(node)} fontSize="small" />
-      <ClearIcon onClick={handleDelete} fontSize="small" />
+      <EditIcon onClick={() => store.openEditingForm(node)} fontSize="small" />
+      <AddIcon
+        onClick={() => store.openCreatingForm(node.id)}
+        fontSize="small"
+      />
+      <DeleteOutlineIcon
+        onClick={() => store.deleteNode(node.id)}
+        fontSize="small"
+      />
 
       {isAsset(node) && <span>[Asset] {node.assetType}</span>}
 

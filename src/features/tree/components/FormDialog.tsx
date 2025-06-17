@@ -4,23 +4,44 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormEvent, useState, ChangeEvent } from 'react';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import { SelectChangeEvent } from '@mui/material/Select';
+import { FormEvent, useState, ChangeEvent, useCallback } from 'react';
 import { AnyNode, isAsset, isDatapoint } from '../types';
 
-interface FormDialogProps {
+const uuid = () => crypto.randomUUID();
+
+enum NodeType {
+  Node = 'Node',
+  Asset = 'Asset',
+  Datapoint = 'Datapoint',
+}
+
+type FormDialogProps = {
   open: boolean;
   onClose: () => void;
   onSubmit: (node: AnyNode) => void;
-  node: AnyNode;
-}
+  node?: AnyNode; // editing existing node
+  parentId?: string; // creating new node
+};
 
 export default function FormDialog({
   open,
   onClose,
   onSubmit,
   node,
+  parentId,
 }: FormDialogProps) {
-  const [form, setForm] = useState<AnyNode>(node);
+  const [form, setForm] = useState<AnyNode>(
+    node ?? {
+      id: uuid(),
+      parentId: parentId ?? '',
+      label: '',
+    },
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,11 +54,58 @@ export default function FormDialog({
     onClose();
   };
 
+  const handleNodeTypeSelected = useCallback(
+    (e: SelectChangeEvent<NodeType>) => {
+      // TODO consider adding AnyNode.type field
+      switch (e.target.value) {
+        case NodeType.Asset:
+          setForm(prev => ({
+            id: prev.id,
+            parentId: prev.parentId,
+            label: prev.label,
+            assetType: '',
+          }));
+          break;
+        case NodeType.Datapoint:
+          setForm(prev => ({
+            id: prev.id,
+            parentId: prev.parentId,
+            label: prev.label,
+            value: '',
+          }));
+          break;
+        default:
+          setForm(prev => ({
+            id: prev.id,
+            parentId: prev.parentId,
+            label: prev.label,
+          }));
+      }
+    },
+    [],
+  );
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{node ? 'Edit Node' : 'Create Node'}</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
+          {!node && (
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Node Type</InputLabel>
+              <Select
+                label="Node Type"
+                defaultValue={NodeType.Node}
+                onChange={handleNodeTypeSelected}
+              >
+                {Object.values(NodeType).map(type => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <TextField
             autoFocus
             required

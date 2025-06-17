@@ -5,7 +5,9 @@ import service, { NodesMap, Message } from 'api/service';
 class TreeStore {
   _nodes: NodesMap = {};
 
-  editingNode: AnyNode | null = null;
+  isFormOpen: boolean = false;
+  editingNode?: AnyNode;
+  parentId?: string;
 
   private async fetchNodes(): Promise<void> {
     this._nodes = await service.getAllData();
@@ -21,7 +23,9 @@ class TreeStore {
       _nodes: observable,
       nodes: computed,
       _handleServiceUpdate: action,
+      isFormOpen: observable,
       editingNode: observable,
+      parentId: observable,
     });
 
     this.fetchNodes();
@@ -70,21 +74,33 @@ class TreeStore {
     await service.deleteNode(id);
   }
 
-  triggerEditing(node: AnyNode): void {
+  openEditingForm(node: AnyNode): void {
+    this.isFormOpen = true;
     this.editingNode = node;
   }
 
-  closeEditing(): void {
-    this.editingNode = null;
+  openCreatingForm(parentId: string): void {
+    this.isFormOpen = true;
+    this.parentId = parentId;
   }
 
-  async submitEditing(node: AnyNode): Promise<void> {
+  closeForm(): void {
+    this.isFormOpen = false;
+    this.editingNode = undefined;
+    this.parentId = undefined;
+  }
+
+  async submitForm(node: AnyNode): Promise<void> {
     try {
-      await this.updateNode(node);
+      if (this.parentId) {
+        await this.addNode(node);
+      } else {
+        await this.updateNode(node);
+      }
     } catch (err) {
       console.error('submitEditing - failed.', err);
     } finally {
-      this.closeEditing();
+      this.closeForm();
     }
   }
 }
