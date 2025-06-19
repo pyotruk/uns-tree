@@ -21,50 +21,56 @@ const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
   );
 
   return (
-    <Box sx={{ pl: 2, py: 0.5 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-        {hasChildren && (
-          <Box
-            onClick={() => store.toggleNodeOpen(node.id)}
-            sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-          >
-            {node.open ? (
-              <ExpandLessIcon fontSize="small" />
-            ) : (
-              <ExpandMoreIcon fontSize="small" />
+    <>
+      <Box sx={{ py: 0.5, display: 'flex' }}>
+        <Box
+          onClick={() => store.toggleNodeOpen(node.id)}
+          sx={{ visibility: hasChildren ? 'visible' : 'hidden', pt: 0.25 }}
+        >
+          {node.open ? (
+            <ExpandLessIcon fontSize="small" />
+          ) : (
+            <ExpandMoreIcon fontSize="small" />
+          )}
+        </Box>
+
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <b>{node.label}</b>
+            <EditIcon
+              onClick={() => store.openEditingForm(node)}
+              fontSize="small"
+              sx={{ ml: 1 }}
+            />
+            <AddIcon
+              onClick={() => store.openCreatingForm(node.id)}
+              fontSize="small"
+            />
+            <DeleteOutlineIcon
+              onClick={() => store.deleteNode(node.id)}
+              fontSize="small"
+            />
+          </Box>
+          <Box>
+            {isAsset(node) && <span>[Asset] {node.assetType}</span>}
+
+            {isDatapoint(node) && (
+              <span>
+                [Datapoint] {node.value} {node.units}
+              </span>
             )}
           </Box>
-        )}
-        <b>{node.label}</b>
-        <EditIcon
-          onClick={() => store.openEditingForm(node)}
-          fontSize="small"
-        />
-        <AddIcon
-          onClick={() => store.openCreatingForm(node.id)}
-          fontSize="small"
-        />
-        <DeleteOutlineIcon
-          onClick={() => store.deleteNode(node.id)}
-          fontSize="small"
-        />
+        </Box>
       </Box>
 
-      {isAsset(node) && <span>[Asset] {node.assetType}</span>}
-
-      {isDatapoint(node) && (
-        <span>
-          [Datapoint] {node.value} {node.units}
-        </span>
-      )}
-
-      {node.open &&
-        store
-          .findChildren(node.id)
-          .map(child => (
+      {node.open && (
+        <Box sx={{ pl: 2 }}>
+          {store.findChildren(node.id).map(child => (
             <AnyNodeComponent key={child.id} node={child} store={store} />
           ))}
-    </Box>
+        </Box>
+      )}
+    </>
   );
 });
 
