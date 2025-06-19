@@ -4,7 +4,7 @@ export type Node = {
   id: string;
   parentId: string;
   label: string;
-  open?: boolean;
+  collapsed?: boolean;
 };
 
 export type Asset = Node & {

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   Background,
   BackgroundVariant,
@@ -13,7 +12,7 @@ import TreeStore from 'features/tree/store';
 import positionNodes from './positionNodes';
 
 const Chart = observer(({ store }: { store: TreeStore }) => {
-  const nodesAndEdges: [Node[], Edge[]] = useMemo(() => {
+  const nodesAndEdges: [Node[], Edge[]] = (() => {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
@@ -39,7 +38,7 @@ const Chart = observer(({ store }: { store: TreeStore }) => {
     positionNodes(nodes, store, store.rootNode!.id, 0, 0);
 
     return [nodes, edges];
-  }, [store.nodes]);
+  })();
 
   return (
     <div style={{ width: '100%', height: '100%' }}>

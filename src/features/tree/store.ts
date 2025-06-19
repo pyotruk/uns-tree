@@ -18,7 +18,7 @@ class TreeStore {
     this.updateNode = this.updateNode.bind(this);
     this.deleteNode = this.deleteNode.bind(this);
     this._handleServiceUpdate = this._handleServiceUpdate.bind(this);
-    this.toggleNodeOpen = this.toggleNodeOpen.bind(this);
+    this.toggleNodeCollapsed = this.toggleNodeCollapsed.bind(this);
 
     makeObservable(this, {
       _nodes: observable,
@@ -27,7 +27,7 @@ class TreeStore {
       isFormOpen: observable,
       editingNode: observable,
       parentId: observable,
-      toggleNodeOpen: action,
+      toggleNodeCollapsed: action,
     });
 
     this.fetchNodes();
@@ -106,10 +106,10 @@ class TreeStore {
     }
   }
 
-  toggleNodeOpen(id: string): void {
+  toggleNodeCollapsed(id: string): void {
     const node = this._nodes[id];
     if (!node) return;
-    node.open = !node.open;
+    node.collapsed = !node.collapsed;
   }
 
   hasChildren(nodeId: string): boolean {

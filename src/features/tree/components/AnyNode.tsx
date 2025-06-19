@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite';
+import { useMemo } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { AnyNode, isAsset, isDatapoint } from '../types';
 import TreeStore from '../store';
-import { useMemo } from 'react';
+import useDragAndDrop from '../useDragAndDrop';
 
 type AnyNodeComponentProps = {
   node: AnyNode;
@@ -15,6 +16,8 @@ type AnyNodeComponentProps = {
 };
 
 const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
+  const { onDragStart, onDrop } = useDragAndDrop(store);
+
   const hasChildren = useMemo(
     () => store.hasChildren(node.id),
     [node.id, store],
@@ -22,15 +25,21 @@ const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
 
   return (
     <>
-      <Box sx={{ py: 0.5, display: 'flex' }}>
+      <Box
+        draggable
+        onDragStart={e => onDragStart(e, node.id)}
+        onDrop={e => onDrop(e, node.id)}
+        onDragOver={e => e.preventDefault()}
+        sx={{ py: 0.5, display: 'flex' }}
+      >
         <Box
-          onClick={() => store.toggleNodeOpen(node.id)}
+          onClick={() => store.toggleNodeCollapsed(node.id)}
           sx={{ visibility: hasChildren ? 'visible' : 'hidden', pt: 0.25 }}
         >
-          {node.open ? (
-            <ExpandLessIcon fontSize="small" />
-          ) : (
+          {node.collapsed ? (
             <ExpandMoreIcon fontSize="small" />
+          ) : (
+            <ExpandLessIcon fontSize="small" />
           )}
         </Box>
 
@@ -63,7 +72,7 @@ const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
         </Box>
       </Box>
 
-      {node.open && (
+      {!node.collapsed && (
         <Box sx={{ pl: 2 }}>
           {store.findChildren(node.id).map(child => (
             <AnyNodeComponent key={child.id} node={child} store={store} />
