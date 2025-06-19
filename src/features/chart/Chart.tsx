@@ -8,7 +8,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { observer } from 'mobx-react-lite';
-import TreeStore from 'features/tree/store';
+import TreeStore from 'features/store';
 import positionNodes from './positionNodes';
 
 const Chart = observer(({ store }: { store: TreeStore }) => {

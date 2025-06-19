@@ -6,9 +6,9 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { AnyNode, isAsset, isDatapoint } from '../types';
-import TreeStore from '../store';
-import useDragAndDrop from '../useDragAndDrop';
+import { AnyNode, isAsset, isDatapoint } from 'features/types';
+import TreeStore from 'features/store';
+import useDragAndDrop from './useDragAndDrop';
 
 type AnyNodeComponentProps = {
   node: AnyNode;

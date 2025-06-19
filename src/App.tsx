@@ -2,9 +2,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import TreeStore from 'features/tree/store';
-import Tree from 'features/tree/Tree';
-import Chart from 'features/chart/Chart';
+import TreeStore from 'features/store';
+import Tree from 'features/tree';
+import Chart from 'features/chart';
 import theme from './theme';
 import { drawerStyles, mainContentStyles } from './App.styles';
 

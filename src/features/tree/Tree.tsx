@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import TreeStore from './store';
-import AnyNode from './components/AnyNode';
-import FormDialog from './components/FormDialog';
+import TreeStore from 'features/store';
+import AnyNode from './AnyNode';
+import FormDialog from './FormDialog';
 
 const Tree = observer(({ store }: { store: TreeStore }) => {
   return (
