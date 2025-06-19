@@ -30,7 +30,7 @@ const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
         onDragStart={e => onDragStart(e, node.id)}
         onDrop={e => onDrop(e, node.id)}
         onDragOver={e => e.preventDefault()}
-        sx={{ py: 0.5, display: 'flex' }}
+        sx={{ py: 0.5, display: 'flex', cursor: 'grab' }}
       >
         <Box
           onClick={() => store.toggleNodeCollapsed(node.id)}

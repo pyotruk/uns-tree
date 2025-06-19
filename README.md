@@ -3,4 +3,4 @@
 ## Run
 
 - `npm i`
-- `npm start`
+- `npm run preview`

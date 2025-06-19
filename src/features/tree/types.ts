@@ -5,6 +5,7 @@ export type Node = {
   parentId: string;
   label: string;
   collapsed?: boolean;
+  order?: number;
 };
 
 export type Asset = Node & {

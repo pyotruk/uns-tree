@@ -43,7 +43,9 @@ class TreeStore {
   }
 
   findChildren(parentId: string): AnyNode[] {
-    return Object.values(this._nodes).filter(n => n.parentId === parentId);
+    return Object.values(this._nodes)
+      .filter(n => n.parentId === parentId)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }
 
   _handleServiceUpdate(message: Message) {

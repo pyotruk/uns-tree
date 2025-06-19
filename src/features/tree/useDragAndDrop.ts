@@ -1,5 +1,6 @@
 import { DragEvent, useCallback } from 'react';
 import TreeStore from './store';
+import { isDatapoint } from './types';
 
 const useDragAndDrop = (store: TreeStore) => {
   const onDragStart = useCallback((e: DragEvent, nodeId: string) => {
@@ -9,10 +10,22 @@ const useDragAndDrop = (store: TreeStore) => {
   const onDrop = useCallback((e: DragEvent, newParentId: string) => {
     const nodeId = e.dataTransfer.getData('text/plain');
     if (nodeId === newParentId) return;
-    store.updateNode({
-      ...store.nodes[nodeId],
-      parentId: newParentId,
-    });
+
+    const parentNode = store.nodes[newParentId];
+
+    if (isDatapoint(parentNode)) {
+      // if new parent is a datapoint, then we consider it as re-ordering without changing parent
+      store.updateNode({
+        ...store.nodes[nodeId],
+        order: (parentNode.order ?? 0) + 1,
+      });
+    } else {
+      // otherwise, we move the node into a new parent
+      store.updateNode({
+        ...store.nodes[nodeId],
+        parentId: newParentId,
+      });
+    }
   }, []);
 
   return {
