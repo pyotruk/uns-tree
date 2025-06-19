@@ -1,4 +1,4 @@
-import { AnyNode } from 'features/tree/types';
+import { AnyNode } from 'features/types';
 import nodes from './data';
 
 const LS_KEY = '__cybus_data';

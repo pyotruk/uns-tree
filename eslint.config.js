@@ -6,4 +6,12 @@ export default tsEslint.config(
   eslint.configs.recommended,
   tsEslint.configs.recommended,
   prettierEslintRecommended,
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
+  },
 );

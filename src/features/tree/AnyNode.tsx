@@ -18,10 +18,7 @@ type AnyNodeComponentProps = {
 const AnyNodeComponent = observer(({ node, store }: AnyNodeComponentProps) => {
   const { onDragStart, onDrop } = useDragAndDrop(store);
 
-  const hasChildren = useMemo(
-    () => store.hasChildren(node.id),
-    [node.id, store],
-  );
+  const hasChildren = store.hasChildren(node.id);
 
   return (
     <>

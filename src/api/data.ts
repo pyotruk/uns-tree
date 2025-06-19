@@ -1,4 +1,4 @@
-import { AnyNode } from 'features/tree/types';
+import { AnyNode } from 'features/types';
 
 const unsTree = {
   Cybus: {
@@ -70,7 +70,6 @@ const flattenTree = (treeNode: object, parentKey?: string): void => {
     nodes[key] = {
       id: key,
       parentId: parentKey ?? '',
-      childrenIds: value.children ? Object.keys(value.children) : [],
       label: key,
       assetType: value.assetType,
       value: value.value,
@@ -83,6 +82,6 @@ const flattenTree = (treeNode: object, parentKey?: string): void => {
 };
 flattenTree(unsTree);
 
-console.debug('DEBUG >>> Flattened nodes:', nodes);
+console.debug('DEBUG >>> flattened nodes >>> ', nodes);
 
 export default nodes;

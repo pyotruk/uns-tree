@@ -9,6 +9,8 @@ class TreeStore {
   editingNode?: AnyNode;
   parentId?: string;
 
+  searchTerm: string = '';
+
   private async fetchNodes(): Promise<void> {
     this._nodes = await service.getAllData();
   }
@@ -28,13 +30,29 @@ class TreeStore {
       editingNode: observable,
       parentId: observable,
       toggleNodeCollapsed: action,
+      searchTerm: observable,
     });
 
     this.fetchNodes();
     service.subscribe(this._handleServiceUpdate);
   }
 
+  private searchNodesWithParents(searchLabel: string): NodesMap {
+    const term = searchLabel.toLowerCase();
+    const nodes: AnyNode[] = Object.values(this._nodes)
+      .filter(node => {
+        return node.label.toLowerCase().includes(term);
+      })
+      .flatMap(node => {
+        return [node, ...this.findParents(node.id)];
+      });
+    return Object.fromEntries(nodes.map(n => [n.id, n]));
+  }
+
   get nodes(): NodesMap {
+    if (this.searchTerm && this.searchTerm.trim().length > 1) {
+      return this.searchNodesWithParents(this.searchTerm);
+    }
     return this._nodes;
   }
 
@@ -43,9 +61,24 @@ class TreeStore {
   }
 
   findChildren(parentId: string): AnyNode[] {
-    return Object.values(this._nodes)
+    return Object.values(this.nodes)
       .filter(n => n.parentId === parentId)
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
+  findParents(nodeId: string): AnyNode[] {
+    const parents: AnyNode[] = [];
+    let currentNode = this._nodes[nodeId];
+    while (currentNode && currentNode.parentId) {
+      const parent = this._nodes[currentNode.parentId];
+      if (parent) {
+        parents.push(parent);
+        currentNode = parent;
+      } else {
+        break; // parent not found, stop traversing
+      }
+    }
+    return parents;
   }
 
   _handleServiceUpdate(message: Message) {
