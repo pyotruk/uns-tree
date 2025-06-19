@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import TreeStore from 'features/tree/store';
 import Tree from 'features/tree/Tree';
+import Chart from 'features/chart/Chart';
 
 const store = new TreeStore();
 const drawerWidth = '33%';
@@ -31,21 +32,11 @@ function App() {
         <Box
           component="main"
           sx={{
-            flexGrow: 1,
-            p: 3,
             width: `calc(100% - ${drawerWidth})`,
+            height: '100vh',
           }}
         >
-          <Box
-            sx={{
-              height: '100vh',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            react-flow
-          </Box>
+          <Chart store={store} />
         </Box>
       </Box>
     </>
