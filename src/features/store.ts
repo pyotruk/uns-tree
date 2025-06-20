@@ -1,6 +1,7 @@
 import { makeObservable, observable, computed, action } from 'mobx';
-import { AnyNode } from './types';
-import service, { NodesMap, Message } from 'api/service';
+import service, { Message } from 'api/service';
+import { AnyNode, NodesMap } from './types';
+import { searchNodesWithParents } from './utils';
 
 class TreeStore {
   _nodes: NodesMap = {};
@@ -37,21 +38,9 @@ class TreeStore {
     service.subscribe(this._handleServiceUpdate);
   }
 
-  private searchNodesWithParents(searchLabel: string): NodesMap {
-    const term = searchLabel.toLowerCase();
-    const nodes: AnyNode[] = Object.values(this._nodes)
-      .filter(node => {
-        return node.label.toLowerCase().includes(term);
-      })
-      .flatMap(node => {
-        return [node, ...this.findParents(node.id)];
-      });
-    return Object.fromEntries(nodes.map(n => [n.id, n]));
-  }
-
   get nodes(): NodesMap {
     if (this.searchTerm && this.searchTerm.trim().length > 1) {
-      return this.searchNodesWithParents(this.searchTerm);
+      return searchNodesWithParents(this.searchTerm, this._nodes);
     }
     return this._nodes;
   }
@@ -64,21 +53,6 @@ class TreeStore {
     return Object.values(this.nodes)
       .filter(n => n.parentId === parentId)
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  }
-
-  findParents(nodeId: string): AnyNode[] {
-    const parents: AnyNode[] = [];
-    let currentNode = this._nodes[nodeId];
-    while (currentNode && currentNode.parentId) {
-      const parent = this._nodes[currentNode.parentId];
-      if (parent) {
-        parents.push(parent);
-        currentNode = parent;
-      } else {
-        break; // parent not found, stop traversing
-      }
-    }
-    return parents;
   }
 
   _handleServiceUpdate(message: Message) {

@@ -1,5 +1,7 @@
 export type AnyNode = Node | Asset | Datapoint;
 
+export type NodesMap = Record<string, AnyNode>;
+
 export type Node = {
   id: string;
   parentId: string;

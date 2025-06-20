@@ -1,9 +1,7 @@
-import { AnyNode } from 'features/types';
+import { AnyNode, NodesMap } from 'features/types';
 import nodes from './data';
 
 const LS_KEY = '__cybus_data';
-
-export type NodesMap = Record<string, AnyNode>;
 
 export type Message = {
   type: 'add' | 'update' | 'delete';
