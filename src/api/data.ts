@@ -1,4 +1,4 @@
-import { AnyNode } from 'features/types';
+import { AnyNode } from 'features/store/types';
 
 const unsTree = {
   Cybus: {

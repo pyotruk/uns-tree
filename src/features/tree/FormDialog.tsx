@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { FormEvent, useState, ChangeEvent, useCallback } from 'react';
-import { AnyNode, isAsset, isDatapoint } from 'features/types';
+import { AnyNode, isAsset, isDatapoint } from 'features/store/types';
 
 const uuid = () => crypto.randomUUID();
 

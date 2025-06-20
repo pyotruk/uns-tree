@@ -6,10 +6,6 @@ import { searchNodesWithParents } from './utils';
 class TreeStore {
   _nodes: NodesMap = {};
 
-  isFormOpen: boolean = false;
-  editingNode?: AnyNode;
-  parentId?: string;
-
   searchTerm: string = '';
 
   private async fetchNodes(): Promise<void> {
@@ -17,25 +13,16 @@ class TreeStore {
   }
 
   constructor() {
-    this.addNode = this.addNode.bind(this);
-    this.updateNode = this.updateNode.bind(this);
-    this.deleteNode = this.deleteNode.bind(this);
-    this._handleServiceUpdate = this._handleServiceUpdate.bind(this);
-    this.toggleNodeCollapsed = this.toggleNodeCollapsed.bind(this);
-
     makeObservable(this, {
       _nodes: observable,
       nodes: computed,
       _handleServiceUpdate: action,
-      isFormOpen: observable,
-      editingNode: observable,
-      parentId: observable,
       toggleNodeCollapsed: action,
       searchTerm: observable,
     });
 
     this.fetchNodes();
-    service.subscribe(this._handleServiceUpdate);
+    service.subscribe(message => this._handleServiceUpdate(message));
   }
 
   get nodes(): NodesMap {
@@ -53,6 +40,10 @@ class TreeStore {
     return Object.values(this.nodes)
       .filter(n => n.parentId === parentId)
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
+  hasChildren(nodeId: string): boolean {
+    return this.findChildren(nodeId).length > 0;
   }
 
   _handleServiceUpdate(message: Message) {
@@ -85,44 +76,10 @@ class TreeStore {
     await service.deleteNode(id);
   }
 
-  openEditingForm(node: AnyNode): void {
-    this.isFormOpen = true;
-    this.editingNode = node;
-  }
-
-  openCreatingForm(parentId: string): void {
-    this.isFormOpen = true;
-    this.parentId = parentId;
-  }
-
-  closeForm(): void {
-    this.isFormOpen = false;
-    this.editingNode = undefined;
-    this.parentId = undefined;
-  }
-
-  async submitForm(node: AnyNode): Promise<void> {
-    try {
-      if (this.parentId) {
-        await this.addNode(node);
-      } else {
-        await this.updateNode(node);
-      }
-    } catch (err) {
-      console.error('submitEditing - failed.', err);
-    } finally {
-      this.closeForm();
-    }
-  }
-
   toggleNodeCollapsed(id: string): void {
     const node = this._nodes[id];
     if (!node) return;
     node.collapsed = !node.collapsed;
-  }
-
-  hasChildren(nodeId: string): boolean {
-    return this.findChildren(nodeId).length > 0;
   }
 }
 

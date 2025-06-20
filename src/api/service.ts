@@ -1,4 +1,4 @@
-import { AnyNode, NodesMap } from 'features/types';
+import { AnyNode, NodesMap } from 'features/store/types';
 import nodes from './data';
 
 const LS_KEY = '__cybus_data';

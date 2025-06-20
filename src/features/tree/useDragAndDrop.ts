@@ -1,6 +1,6 @@
 import { DragEvent, useCallback } from 'react';
-import TreeStore from 'features/store';
-import { isDatapoint } from 'features/types';
+import { TreeStore } from 'features/store';
+import { isDatapoint } from 'features/store/types';
 
 const useDragAndDrop = (store: TreeStore) => {
   const onDragStart = useCallback((e: DragEvent, nodeId: string) => {

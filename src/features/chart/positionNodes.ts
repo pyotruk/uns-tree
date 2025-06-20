@@ -1,5 +1,5 @@
 import { Node } from '@xyflow/react';
-import TreeStore from 'features/store';
+import { TreeStore } from 'features/store';
 
 // Positions ReactFlow nodes recursively, in a tree structure
 const positionNodes = (
