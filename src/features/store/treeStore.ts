@@ -1,7 +1,7 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 import service, { Message } from 'api/service';
 import { AnyNode, NodesMap } from './types';
-import { searchNodesWithParents } from './utils';
+import { findAllParentIds, searchNodesWithParents } from './utils';
 
 class TreeStore {
   _nodes: NodesMap = {};
@@ -44,6 +44,17 @@ class TreeStore {
 
   hasChildren(nodeId: string): boolean {
     return this.findChildren(nodeId).length > 0;
+  }
+
+  buildNodePathLabelsText(nodeId: string): string {
+    const node = this._nodes[nodeId];
+    if (!node) return '';
+
+    const parentIds = findAllParentIds(nodeId, this._nodes);
+    const labels = parentIds.map(id => this._nodes[id].label);
+    labels.push(node.label);
+
+    return labels.join(' / ');
   }
 
   _handleServiceUpdate(message: Message) {

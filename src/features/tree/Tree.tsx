@@ -24,7 +24,11 @@ const Tree = observer(({ treeStore, formStore }: TreeProps) => {
         />
       </Box>
       {treeStore.rootNode && (
-        <AnyNode node={treeStore.rootNode} treeStore={treeStore} formStore={formStore} />
+        <AnyNode
+          node={treeStore.rootNode}
+          treeStore={treeStore}
+          formStore={formStore}
+        />
       )}
       {formStore.isFormOpen && (
         <FormDialog
@@ -33,6 +37,7 @@ const Tree = observer(({ treeStore, formStore }: TreeProps) => {
           onSubmit={node => formStore.submitForm(node)}
           node={formStore.editingNode}
           parentId={formStore.parentId}
+          pathText={formStore.nodePathLabelsText}
         />
       )}
     </>

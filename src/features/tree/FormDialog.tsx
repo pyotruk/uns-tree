@@ -26,6 +26,7 @@ type FormDialogProps = {
   onSubmit: (node: AnyNode) => void;
   node?: AnyNode; // editing existing node
   parentId?: string; // creating new node
+  pathText?: string;
 };
 
 export default function FormDialog({
@@ -34,6 +35,7 @@ export default function FormDialog({
   onSubmit,
   node,
   parentId,
+  pathText,
 }: FormDialogProps) {
   const [form, setForm] = useState<AnyNode>(
     node ?? {
@@ -87,7 +89,9 @@ export default function FormDialog({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{node ? 'Edit Node' : 'Create Node'}</DialogTitle>
+      <DialogTitle>
+        {node ? `Edit Node (${pathText})` : `Create Node (in ${pathText})`}
+      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           {!node && (

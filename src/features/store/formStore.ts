@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 import { AnyNode } from './types';
 import TreeStore from './treeStore';
 
@@ -12,7 +12,14 @@ class FormStore {
       isFormOpen: observable,
       editingNode: observable,
       parentId: observable,
+      nodePathLabelsText: computed,
     });
+  }
+
+  get nodePathLabelsText(): string {
+    const nodeId = this.editingNode?.id ?? this.parentId;
+    if (!nodeId) return '';
+    return this.treeStore.buildNodePathLabelsText(nodeId);
   }
 
   openEditingForm(node: AnyNode): void {

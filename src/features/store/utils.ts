@@ -33,4 +33,4 @@ const searchNodesWithParents = (
   return Object.fromEntries(nodes.map(n => [n.id, n]));
 };
 
-export { searchNodesWithParents };
+export { findAllParentIds, searchNodesWithParents };
