@@ -12,7 +12,7 @@ const findAllParentIds = (nodeId: string, nodesMap: NodesMap): string[] => {
       break; // parent not found, stop traversing
     }
   }
-  return parentIds;
+  return parentIds.reverse();
 };
 
 const searchNodesWithParents = (

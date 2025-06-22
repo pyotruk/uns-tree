@@ -14,4 +14,10 @@ export default tsEslint.config(
       ],
     },
   },
+  {
+    files: ['**/*.spec.ts', '**/*.spec.tsx'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
 );

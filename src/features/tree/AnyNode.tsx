@@ -46,15 +46,18 @@ const AnyNodeComponent = observer(
               <b>{node.label}</b>
               <EditIcon
                 onClick={() => formStore.openEditingForm(node)}
+                titleAccess="edit node"
                 fontSize="small"
                 sx={{ ml: 1 }}
               />
               <AddIcon
                 onClick={() => formStore.openCreatingForm(node.id)}
+                titleAccess="create node"
                 fontSize="small"
               />
               <DeleteOutlineIcon
                 onClick={() => treeStore.deleteNode(node.id)}
+                titleAccess="delete node"
                 fontSize="small"
               />
             </Box>
