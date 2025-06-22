@@ -115,9 +115,10 @@ export default function FormDialog({
             required
             margin="dense"
             name="label"
-            label="Label"
             value={form.label}
             onChange={handleChange}
+            label="Label"
+            placeholder="Label"
             fullWidth
             variant="standard"
           />
@@ -126,9 +127,10 @@ export default function FormDialog({
               required
               margin="dense"
               name="assetType"
-              label="Asset Type"
               value={form.assetType}
               onChange={handleChange}
+              label="Asset Type"
+              placeholder="Asset Type"
               fullWidth
               variant="standard"
             />
@@ -139,18 +141,20 @@ export default function FormDialog({
                 required
                 margin="dense"
                 name="value"
-                label="Value"
                 value={form.value}
                 onChange={handleChange}
+                label="Value"
+                placeholder="Value"
                 fullWidth
                 variant="standard"
               />
               <TextField
                 margin="dense"
                 name="units"
-                label="Units"
                 value={form.units}
                 onChange={handleChange}
+                label="Units"
+                placeholder="Units"
                 fullWidth
                 variant="standard"
               />

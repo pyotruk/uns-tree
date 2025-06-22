@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { AnyNode } from './types';
 import TreeStore from './treeStore';
 
@@ -13,6 +13,9 @@ class FormStore {
       editingNode: observable,
       parentId: observable,
       nodePathLabelsText: computed,
+      openEditingForm: action,
+      openCreatingForm: action,
+      closeForm: action,
     });
   }
 
